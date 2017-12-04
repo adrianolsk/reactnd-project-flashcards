@@ -1,8 +1,21 @@
 import React, {Component} from 'react';
 import {Header, Title, Container, Item, Input, Icon, Content, Button, Text} from "native-base";
+import {saveDeckTitle} from "../utils/api";
+import {saveDeckTitleAsync} from "../state/actions";
+import {connect} from 'react-redux';
 
+ class NewDeck extends Component{
 
-export default class NewDeck extends Component{
+    state = {
+        title: '',
+    };
+
+    onSave = () => {
+      //  if (this.state.title) {
+            this.props.saveDeckTitle(this.state.title);
+            this.setState({ title: '' });
+        //}
+    };
 
     render(){
         const bug = false;
@@ -11,15 +24,29 @@ export default class NewDeck extends Component{
 
                 <Content>
                     <Item error={bug} success={!bug}>
-                        <Input placeholder='Textbox with Error Input'/>
+                        <Input
+                            onChangeText={title => this.setState({ title })}
+                            placeholder='Textbox with Error Input'/>
                         {/*<Icon name='close-circle' />*/}
                         <Icon name='checkmark-circle' />
                     </Item>
-                    <Button block success>
+                    <Button onPress={this.onSave} block success>
                         <Text>Save deck</Text>
                     </Button>
+                    <Text>
+                        {JSON.stringify(this.state,null,2)}
+                    </Text>
                 </Content>
             </Container>
         );
     }
 }
+
+
+
+
+const mapDispatchToProps = dispatch => ({
+    saveDeckTitle: (title) => dispatch(saveDeckTitleAsync(title))
+});
+
+export default connect(null, mapDispatchToProps)(NewDeck);

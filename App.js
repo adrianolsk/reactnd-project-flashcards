@@ -4,8 +4,13 @@ import {TabNavigator} from 'react-navigation';
 import Decks from "./src/components/Decks";
 import NewDeck from "./src/components/NewDeck";
 import AppStatusBar from "./src/components/AppStatusBar";
+import {applyMiddleware, compose, createStore} from 'redux';
 import {blue} from "./src/utils/Colors";
+import reducer from './src/state/reducer';
+import thunk from 'redux-thunk';
+import {Provider} from 'react-redux';
 
+const store = createStore(reducer, compose(applyMiddleware(thunk)));
 
 const TabNav = TabNavigator({
     Decks: {
@@ -45,10 +50,17 @@ export default class App extends React.Component {
         if (!this.state.isReady) {
             return <Expo.AppLoading/>;
         }
-        return ([
-            <AppStatusBar backgroundColor={blue} barStyle="light-content"  key='statusBar'/>,
-            <TabNav key='tabs' />
-        ]);
+        return (
+            <Provider store={store}>
+                <View style={{flex:1}}>
+                    <AppStatusBar
+                        backgroundColor={blue}
+                        barStyle="light-content"/>
+                    <TabNav/>
+                </View>
+
+            </Provider>
+        );
     }
 }
 

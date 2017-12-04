@@ -4,11 +4,11 @@ import {MaterialCommunityIcons} from '@expo/vector-icons'
 import {View} from "react-native";
 import PropTypes from 'prop-types';
 
-const Deck = ({title, cards,onSelect})=> {
+const Deck = ({deck,onSelect})=> {
 
     return(
             <Card>
-                <CardItem button onPress={()=> onSelect(title)}>
+                <CardItem button onPress={()=> onSelect(deck.title)}>
                     <Body style={{flex: 1, flexDirection: 'row'}}>
                     <View style={{width: 45}}>
                         <MaterialCommunityIcons
@@ -17,10 +17,10 @@ const Deck = ({title, cards,onSelect})=> {
                     </View>
                     <View style={{flex: 1}}>
                         <Text style={{fontWeight: 'bold'}}>
-                            {title}
+                            {deck.title}
                         </Text>
                         <Text>
-                            {cards} {cards && (cards > 1 ? 'Cards' : 'Card')}
+                            {deck.questions.length} {deck.questions.length === 1 ? 'Card' : 'Cards'}
                         </Text>
                     </View>
                     </Body>
@@ -31,8 +31,7 @@ const Deck = ({title, cards,onSelect})=> {
 }
 
 Deck.propTypes = {
-    title: PropTypes.string.isRequired,
-    cards: PropTypes.number.isRequired,
+    deck: PropTypes.object,
     onSelect: PropTypes.func.isRequired
 };
 
