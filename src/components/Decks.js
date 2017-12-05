@@ -6,7 +6,13 @@ import Deck from "./Deck";
 import {getDecks} from "../utils/api";
 import {connect} from 'react-redux';
 import {getDecksAsync} from "../state/actions";
- class Decks extends Component {
+import DeckDetail from "./DeckDetail";
+
+import { StackNavigator } from 'react-navigation';
+
+
+
+ export default class Decks extends Component {
 
     constructor() {
         super();
@@ -20,7 +26,9 @@ import {getDecksAsync} from "../state/actions";
 
 
     onSelect = (title) => {
-        alert(title);
+        //alert(title);
+        // this.props.navigation.navigate('Detail');
+        this.props.navigation.navigate('Detail', {title});
     }
 
     render() {
@@ -43,12 +51,27 @@ import {getDecksAsync} from "../state/actions";
     }
 }
 
-const mapStateToProps = (state, props) => ({
-    decks: state
-});
-
-const mapDispatchToProps = dispatch => ({
-    getDecks: () => dispatch(getDecksAsync())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Decks);
+// const mapStateToProps = (state, props) => ({
+//     decks: state
+// });
+//
+// const mapDispatchToProps = dispatch => ({
+//     getDecks: () => dispatch(getDecksAsync())
+// });
+//
+//
+// const ModalStack = StackNavigator({
+//     Home: {
+//         screen: connect(mapStateToProps, mapDispatchToProps)(Decks),
+//     },
+//     Detail: {
+//         path: 'deck/:name',
+//         screen: DeckDetail,
+//         mode: 'modal'
+//     },
+// }, {headerMode: 'true',
+//     mode: 'modal',
+//     navigationOptions: {
+//     gesturesEnabled: false
+// }});
+// export default ModalStack;

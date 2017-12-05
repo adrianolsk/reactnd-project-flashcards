@@ -20,6 +20,13 @@ export function getDecksAsync(title) {
 
 }
 
+export function getDeckAsync(title) {
+    return dispatch =>
+        API.getDeck(title).then((result) =>
+            dispatch(getDeck(result)));
+
+}
+
 function saveDeckTitle(data) {
     return {type: SAVE_DECK, data}
 }

@@ -5,15 +5,26 @@ import {
     ADD_CARD_TO_DECK
 } from './actions';
 
-function decks(state = [], action) {
+function decks(state = {
+    decks: [],
+    deck: {}
+}, action) {
 
     switch (action.type) {
         case GET_DECKS:
-            return [...action.data];
+            return {
+                decks: [...action.data]
+            };
+        case GET_DECK:
+            return {
+                ...state,
+                deck: {...action.data}
+            };
         case SAVE_DECK:
-            return [...state,
-                {title: action.data, questions: []}
-            ];
+            return {
+                ...state,
+                decks: [... state.decks, {title: action.data, questions: []}]
+            };
         default:
             return state;
     }

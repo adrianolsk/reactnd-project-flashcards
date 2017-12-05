@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {TabNavigator} from 'react-navigation';
+import {StackNavigator, TabNavigator} from 'react-navigation';
 import Decks from "./src/components/Decks";
 import NewDeck from "./src/components/NewDeck";
 import AppStatusBar from "./src/components/AppStatusBar";
@@ -8,24 +8,56 @@ import {applyMiddleware, compose, createStore} from 'redux';
 import {blue} from "./src/utils/Colors";
 import reducer from './src/state/reducer';
 import thunk from 'redux-thunk';
-import {Provider} from 'react-redux';
+import {connect, Provider} from 'react-redux';
+import {getDecksAsync} from "./src/state/actions";
+import DeckDetail from "./src/components/DeckDetail";
+import Quiz from "./src/components/Quiz";
 
 const store = createStore(reducer, compose(applyMiddleware(thunk)));
 
+
+
+const mapStateToProps = (state, props) => ({
+    decks: state.decks
+});
+
+const mapDispatchToProps = dispatch => ({
+    getDecks: () => dispatch(getDecksAsync())
+});
+
 const TabNav = TabNavigator({
     Decks: {
-        screen: Decks,
+        screen: connect(mapStateToProps, mapDispatchToProps)(Decks),
     },
     NewDeck: {
         screen: NewDeck,
     },
 }, {
-    tabBarPosition: 'top',
+    // tabBarPosition: 'top',
     animationEnabled: true,
     tabBarOptions: {
         activeTintColor: '#FFFFFF',
     },
 });
+
+
+
+const NavStack = StackNavigator({
+    Home: {
+        screen:   TabNav,
+    },
+    Detail: {
+        screen: DeckDetail,
+        mode: 'modal'
+    },
+    Quiz: {
+        screen: Quiz
+    },
+}, {headerMode: 'true',
+    mode: 'modal',
+    navigationOptions: {
+        gesturesEnabled: false
+    }});
 
 
 export default class App extends React.Component {
@@ -56,7 +88,8 @@ export default class App extends React.Component {
                     <AppStatusBar
                         backgroundColor={blue}
                         barStyle="light-content"/>
-                    <TabNav/>
+
+                    <NavStack/>
                 </View>
 
             </Provider>

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 const Deck = ({deck,onSelect})=> {
 
     return(
+
             <Card>
                 <CardItem button onPress={()=> onSelect(deck.title)}>
                     <Body style={{flex: 1, flexDirection: 'row'}}>
