@@ -18,7 +18,8 @@ class DeckDetail extends Component {
     }
 
     onAddCard = () => {
-        alert('add')
+        const {title} = this.props.navigation.state.params;
+        this.props.navigation.navigate('AddCard', {title});
     }
 
     render() {

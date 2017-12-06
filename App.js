@@ -12,6 +12,7 @@ import {connect, Provider} from 'react-redux';
 import {getDecksAsync} from "./src/state/actions";
 import DeckDetail from "./src/components/DeckDetail";
 import Quiz from "./src/components/Quiz";
+import AddCard from "./src/components/AddCard";
 
 const store = createStore(reducer, compose(applyMiddleware(thunk)));
 
@@ -52,6 +53,9 @@ const NavStack = StackNavigator({
     },
     Quiz: {
         screen: Quiz
+    },
+    AddCard: {
+        screen: AddCard
     },
 }, {headerMode: 'true',
     mode: 'modal',
