@@ -1,1 +1,1 @@
-export const blue = 'blue';
+export const blue = "blue";
