@@ -1,71 +1,102 @@
-import React, { Component } from "react";
-import { Image, View } from "react-native";
-
+import React, {Component} from "react";
+import {Image, View} from "react-native";
+import {Entypo, FontAwesome} from '@expo/vector-icons'
 import {
-  Container,
-  Header,
-  Title,
-  Button,
-  IconNB,
-  DeckSwiper,
-  Card,
-  CardItem,
-  Icon,
-  Thumbnail,
-  Text,
-  Left,
-  Right,
-  Body,
-  Content
+    Container,
+    Header,
+    Title,
+    Button,
+    IconNB,
+    DeckSwiper,
+    Card,
+    CardItem,
+    Icon,
+    Thumbnail,
+    Text,
+    Left,
+    Right,
+    Body,
+    Content, List, ListItem, InputGroup, Input, Form, Item, Label
 } from "native-base";
-import { connect } from "react-redux";
-import { getDeckAsync } from "../state/actions";
+import {connect} from "react-redux";
+import {addCardToDeckAsync, getDeckAsync} from "../state/actions";
 
 class AddCard extends Component {
-  // eslint-disable-line
+    // eslint-disable-line
 
-  onSave = () => {
-    alert("save");
-  };
+    constructor(){
+        super();
+        this.state = {
+            card: {}
+        };
+    }
+    onSave = () => {
+        // alert(JSON.stringify(this.state.form, null, 2));
+        //addCardToDeck
+        const { deck } = this.props.navigation.state.params;
+        this.props.addCardToDeck(deck, this.state.card)
+            .then(()=> this.props.navigation.goBack());
+    };
 
-  render() {
-    return (
-      <Container style={{ backgroundColor: "#FBFAFA" }}>
-        <Header>
-          <Left>
-            <Button transparent onPress={() => this.props.navigation.goBack()}>
-              <Icon name="arrow-back" />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Add a card</Title>
-          </Body>
-          <Right />
-        </Header>
+    setValue = (value, field) => {
 
-        <View style={{ flex: 1, padding: 12 }}>
-          <Text>{JSON.stringify(this.props, null, 2)}</Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-            flex: 1,
-            position: "absolute",
-            bottom: 50,
-            left: 0,
-            right: 0,
-            justifyContent: "space-between",
-            padding: 15
-          }}
-        >
-          <Button iconLeft onPress={this.onSave}>
-            <Icon name="arrow-back" />
-            <Text>Yes</Text>
-          </Button>
-        </View>
-      </Container>
-    );
-  }
+        var object = {};
+        object[field] = value;
+        this.setState({
+            card: {
+                ...this.state.card,
+                ...object
+            }
+        });
+    }
+
+    render() {
+        return (
+            <Container style={{
+                backgroundColor: "#FFF"
+            }}>
+                <Header>
+                    <Left>
+                        <Button transparent onPress={() => this.props.navigation.goBack()}>
+                            <Icon name="arrow-back"/>
+                        </Button>
+                    </Left>
+                    <Body>
+                    <Title>Floating Label</Title>
+                    </Body>
+                    <Right/>
+                </Header>
+
+                <Content>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label style={{marginTop: 10}}>Question</Label>
+                            <Input onChangeText={(value) => this.setValue (value, 'question')} name='question'/>
+                        </Item>
+                        <Item floatingLabel last>
+                            <Label style={{marginTop: 10}}>Answer</Label>
+                            <Input  onChangeText={(value) => this.setValue (value, 'answer')}/>
+                        </Item>
+                    </Form>
+                    <Button block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
+                        <Text>Save</Text>
+                    </Button>
+                </Content>
+            </Container>
+        );
+    }
 }
 
-export default AddCard;
+
+
+const mapStateToProps = (state, props) => ({
+    deck: state.deck
+});
+
+const mapDispatchToProps = dispatch => ({
+    addCardToDeck: (deck, card) => dispatch(addCardToDeckAsync(deck, card))
+});
+
+export default connect(null, mapDispatchToProps)(AddCard);
+
+
