@@ -6,14 +6,15 @@ import {
     Container,
     Item,
     Input,
-    Icon,
+
     Content,
     Button,
-    Text
+    Text, Left, Body, Right, Form, Label
 } from "native-base";
 import {saveDeckTitle} from "../utils/api";
 import {saveDeckTitleAsync} from "../state/actions";
 import {connect} from "react-redux";
+import {Icon} from "expo";
 
 class NewDeck extends Component {
     state = {
@@ -34,23 +35,32 @@ class NewDeck extends Component {
     };
 
     render() {
-        const bug = false;
+
         return (
-            <Container>
+            <Container style={{
+                backgroundColor: "#FFF"
+            }}>
+
+
                 <Content>
-                    <Item error={bug} success={!bug}>
-                        <Input
-                            onChangeText={title => this.setState({title})}
-                            placeholder="Textbox with Error Input"
-                        />
-                        <Icon name="checkmark-circle"/>
-                    </Item>
-                    <Button onPress={this.onSave} block success>
-                        <Text>Save deck</Text>
+                    <Form>
+                        <Item floatingLabel>
+                            <Label style={{marginTop: 10}}>Name of your deck</Label>
+                            <Input  onChangeText={title => this.setState({title})} />
+                        </Item>
+
+                    </Form>
+
+
+
+
+
+                    <Button block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
+                        <Text>Save</Text>
                     </Button>
-                    <Text>{JSON.stringify(this.state, null, 2)}</Text>
                 </Content>
             </Container>
+
         );
     }
 }

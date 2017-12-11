@@ -62,7 +62,7 @@ class AddCard extends Component {
                         </Button>
                     </Left>
                     <Body>
-                    <Title>Floating Label</Title>
+                    <Title>Add a Card</Title>
                     </Body>
                     <Right/>
                 </Header>

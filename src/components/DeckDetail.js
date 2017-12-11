@@ -9,9 +9,9 @@ import {
     Header,
     Button,
     Icon,
-    Title
+    Title, Card, CardItem
 } from "native-base";
-import {StyleSheet, Alert} from "react-native";
+import {StyleSheet, Alert, View} from "react-native";
 import {connect} from "react-redux";
 import {getDeckAsync, removeDecksAsync} from "../state/actions";
 
@@ -73,23 +73,55 @@ class DeckDetail extends Component {
                     </Right>
                 </Header>
 
-                <Content scrollEnabled={true}>
-                    <Text>{title} </Text>
-                    <Text>{questions.length} Card(s)</Text>
-                    <Button onPress={this.onAddCard} block>
-                        <Text>Add Question</Text>
-                    </Button>
-                    <Button onPress={this.onStartQuiz} block success>
-                        <Text>Start</Text>
-                    </Button>
-                </Content>
+                <View style={{flex: 1, padding: 12}}>
+                    <Card style={{flex:1}}>
+
+
+                        <CardItem style={{
+                            flex: 1,
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            <View
+                                style={{
+                                    flex: 1,
+                                    justifyContent: 'center',
+
+                                }}
+                            >
+                                <Text style={{fontSize:30, textAlign:'center'}}> {title}</Text>
+
+                                <Text style={{fontSize:20, textAlign:'center'}}>{questions.length} Card(s)</Text>
+                            </View>
+                            <View
+                                style={{flex: 1}}
+                            >
+                                <Button iconLeft onPress={this.onAddCard}success block style={styles.button}>
+                                    <Icon name="add"/>
+                                    <Text>Add Card</Text>
+                                </Button>
+                                <Button iconLeft  onPress={this.onStartQuiz}  danger block style={styles.button}>
+                                    <Icon name="play"/>
+                                    <Text>Start Quiz</Text>
+
+                                </Button>
+                            </View>
+                        </CardItem>
+
+                    </Card>
+
+                </View>
             </Container>
         );
     }
 }
 
 const styles = StyleSheet.create({
-    container: {}
+    container: {},
+    button:{
+        margin:10
+    }
 });
 
 const mapStateToProps = (state, props) => ({
