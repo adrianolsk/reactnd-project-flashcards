@@ -20,6 +20,7 @@ import {
 } from "native-base";
 import {connect} from "react-redux";
 import {getDeckAsync} from "../state/actions";
+import {clearLocalNotification, setLocalNotification} from "../utils/Notifications";
 
 
 const initialState = {
@@ -129,11 +130,19 @@ class Quiz extends Component {
 
     onToggleAnswer = () => {
         this.flip();
-         setTimeout(() => {
+        setTimeout(() => {
             this.setState((state) => ({
                 showAnswer: !state.showAnswer
             }));
-         }, 500);
+        }, 500);
+    }
+
+
+    getScore = (correct, questions) => {
+
+        clearLocalNotification().then(setLocalNotification);
+        return (<Text> {((100 * correct) / questions.length).toFixed(2)}% </Text>  );
+
     }
 
     render() {
@@ -217,7 +226,6 @@ class Quiz extends Component {
                     ) : (
                         <Card>
 
-
                             <CardItem style={{
                                 flex: 1,
                                 flexDirection: 'column',
@@ -231,15 +239,17 @@ class Quiz extends Component {
 
                                     }}
                                 >
-                                    <Text style={{fontSize: 25}}>Your
-                                        Score: {((100 * correct) / questions.length).toFixed(2)}%</Text>
+                                    <Text style={{fontSize: 25}}>Your Score: {this.getScore(correct, questions)}</Text>
                                 </View>
-                                <View
-                                    style={{flex: 1}}
-                                >
-                                    <Button iconLeft onPress={this.onRestart} success block style={styles.button}>
+                                <View style={{flex: 1}}>
+                                    <Button iconLeft
+                                            onPress={this.onRestart}
+                                            success
+                                            block
+                                            style={styles.button}>
                                         <Icon name="refresh"/>
-                                        <Text>Restart Quiz</Text>
+                                        <Text> Restart Quiz
+                                        </Text>
                                     </Button>
                                     <Button iconLeft onPress={this.onBack} danger block style={styles.button}>
                                         <Icon name="arrow-back"/>
