@@ -16,7 +16,7 @@ import {
     Left,
     Right,
     Body,
-    Content
+    Content, Spinner
 } from "native-base";
 import {connect} from "react-redux";
 import {getDeckAsync} from "../state/actions";
@@ -63,7 +63,7 @@ class Quiz extends Component {
         Animated.sequence([
             Animated.timing(this.animatedTranslateValue, {
                 toValue: -400,
-                duration: 300,
+                duration: 500,
                 useNativeDriver: true,
             }),
             Animated.timing(this.animatedTranslateValue, {
@@ -73,7 +73,7 @@ class Quiz extends Component {
             }),
             Animated.timing(this.animatedTranslateValue, {
                 toValue: 0,
-                duration: 300,
+                duration: 500,
                 useNativeDriver: true,
             }),
         ]).start();
@@ -104,7 +104,7 @@ class Quiz extends Component {
                 correct: state.correct + 1,
                 showAnswer: false
             }));
-        }, 300);
+        }, 500);
 
     };
 
@@ -116,7 +116,7 @@ class Quiz extends Component {
                 index: state.index + 1,
                 showAnswer: false
             }));
-        }, 300);
+        }, 500);
     };
 
     onRestart = () => {
@@ -134,14 +134,14 @@ class Quiz extends Component {
             this.setState((state) => ({
                 showAnswer: !state.showAnswer
             }));
-        }, 500);
+        }, 300);
     }
 
 
     getScore = (correct, questions) => {
 
         clearLocalNotification().then(setLocalNotification);
-        return (<Text> {((100 * correct) / questions.length).toFixed(2)}% </Text>  );
+        return (<Text style={{fontSize: 25, fontWeight:'bold'}}> {((100 * correct) / questions.length).toFixed(2)}% </Text>  );
 
     }
 
@@ -174,6 +174,18 @@ class Quiz extends Component {
                 </Header>
 
                 <View style={{flex: 1, padding: 12}}>
+                    <View style={{
+                        position: 'absolute',
+                        flex: 1,
+                        zIndex: 0,
+                        top: 0,
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        justifyContent:'center'
+                    }}>
+                        <Spinner color='blue' />
+                    </View>
 
                     {(index < questions.length) ? (
 

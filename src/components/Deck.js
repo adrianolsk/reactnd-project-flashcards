@@ -19,17 +19,17 @@ const Deck = ({ deck, onSelect }) => {
     <Card>
       <CardItem button onPress={() => onSelect(deck.title)}>
         <Body style={{ flex: 1, flexDirection: "row" }}>
-          <View style={{ width: 45 }}>
+          <View style={{ width: 65 }}>
             <MaterialCommunityIcons
-              style={{ fontSize: 35 }}
+              style={{ fontSize: 55 }}
               name="cards-playing-outline"
             />
           </View>
           <View style={{ flex: 1 }}>
-            <Text style={{ fontWeight: "bold" }}>{deck.title}</Text>
-            <Text>
-              {deck.questions.length}{" "}
-              {deck.questions.length === 1 ? "Card" : "Cards"}
+            <Text style={{ fontWeight: "bold", fontSize: 20 }}>{deck.title}</Text>
+            <Text style={{color:"#5f5f5f"}}>
+              {deck.questions.length}
+              {deck.questions.length === 1 ? " card in this deck" : " cards in this deck"}
             </Text>
           </View>
         </Body>

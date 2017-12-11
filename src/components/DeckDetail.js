@@ -101,7 +101,7 @@ class DeckDetail extends Component {
                                     <Icon name="add"/>
                                     <Text>Add Card</Text>
                                 </Button>
-                                <Button iconLeft  onPress={this.onStartQuiz}  danger block style={styles.button}>
+                                <Button iconLeft  onPress={this.onStartQuiz}  danger block style={styles.button} disabled={questions.length ===0}>
                                     <Icon name="play"/>
                                     <Text>Start Quiz</Text>
 

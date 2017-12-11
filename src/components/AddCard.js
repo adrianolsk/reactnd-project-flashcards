@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import {Image, View} from "react-native";
 import {Entypo, FontAwesome} from '@expo/vector-icons'
 import {
     Container,
@@ -24,18 +23,26 @@ import {addCardToDeckAsync, getDeckAsync} from "../state/actions";
 class AddCard extends Component {
     // eslint-disable-line
 
-    constructor(){
+    constructor() {
         super();
         this.state = {
-            card: {}
+            card: {
+                question: '',
+                answer: ''
+            }
         };
     }
+
     onSave = () => {
-        // alert(JSON.stringify(this.state.form, null, 2));
-        //addCardToDeck
-        const { deck } = this.props.navigation.state.params;
-        this.props.addCardToDeck(deck, this.state.card)
-            .then(()=> this.props.navigation.goBack());
+
+        const {deck} = this.props.navigation.state.params;
+        this.setState({
+            isSubmitted: true
+        });
+        const {card} = this.state
+        if (card.question.length > 0 && card.answer.length > 0) {
+            this.props.addCardToDeck(deck, card).then(() => this.props.navigation.goBack());
+        }
     };
 
     setValue = (value, field) => {
@@ -50,7 +57,25 @@ class AddCard extends Component {
         });
     }
 
+    getFieldStyle = (field) => {
+        if (this.state.isSubmitted) {
+            if (this.state.card[field].length === 0) {
+                return {
+                    color: 'red'
+                };
+            } else {
+                return {
+                    color: 'green'
+                };
+            }
+        }
+
+        return {}
+
+    }
+
     render() {
+
         return (
             <Container style={{
                 backgroundColor: "#FFF"
@@ -70,12 +95,14 @@ class AddCard extends Component {
                 <Content>
                     <Form>
                         <Item floatingLabel>
-                            <Label style={{marginTop: 10}}>Question</Label>
-                            <Input onChangeText={(value) => this.setValue (value, 'question')} name='question'/>
+                            <Label style={{marginTop: 10, ...this.getFieldStyle('question')}}>* Question</Label>
+
+                            <Input onChangeText={(value) => this.setValue(value, 'question')}/>
+
                         </Item>
                         <Item floatingLabel last>
-                            <Label style={{marginTop: 10}}>Answer</Label>
-                            <Input  onChangeText={(value) => this.setValue (value, 'answer')}/>
+                            <Label style={{marginTop: 10, ...this.getFieldStyle('answer')}}>* Answer</Label>
+                            <Input success onChangeText={(value) => this.setValue(value, 'answer')}/>
                         </Item>
                     </Form>
                     <Button block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
@@ -87,11 +114,10 @@ class AddCard extends Component {
     }
 }
 
-
-
-const mapStateToProps = (state, props) => ({
-    deck: state.deck
-});
+//
+// const mapStateToProps = (state, props) => ({
+//     deck: state.deck
+// });
 
 const mapDispatchToProps = dispatch => ({
     addCardToDeck: (deck, card) => dispatch(addCardToDeckAsync(deck, card))
