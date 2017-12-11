@@ -92,7 +92,7 @@ export default class App extends React.Component {
     return (
       <Provider store={store}>
         <View style={{ flex: 1 }}>
-          <AppStatusBar backgroundColor={blue} barStyle="light-content" />
+          <AppStatusBar backgroundColor="#006699" barStyle="light-content" />
 
           <NavStack />
         </View>

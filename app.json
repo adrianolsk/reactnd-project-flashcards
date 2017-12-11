@@ -1,5 +1,12 @@
 {
   "expo": {
+    "name": "Adriano Flashcards",
+    "slug": "FlashCards",
+    "privacy": "public",
+    "githubUrl": "https://github.com/adrianolsk/reactnd-project-flashcards",
+    "orientation": "portrait",
+    "primaryColor": "#006699",
+    "icon": "./src/img/deck.png",
     "sdkVersion": "23.0.0"
   }
 }
