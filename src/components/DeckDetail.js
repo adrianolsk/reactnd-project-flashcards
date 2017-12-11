@@ -41,8 +41,8 @@ class DeckDetail extends Component {
                 {
                     text: 'Yes, delete it!',
                     onPress: () => {
-                        this.props.removeDeck(title);
-                        this.props.navigation.navigate('Decks')
+                        this.props.removeDeck(title).then(()=> this.props.navigation.navigate('Decks'));
+
                     }
                 },
                 {text: 'No please!'}

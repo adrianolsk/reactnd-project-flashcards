@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import {View, StyleSheet, TouchableOpacity} from "react-native";
+import {View, StyleSheet, TouchableOpacity, Animated} from "react-native";
 
 import {
     Container,
@@ -37,19 +37,85 @@ class Quiz extends Component {
         }
     }
 
+    componentWillMount() {
+        this.animatedValue = new Animated.Value(0);
+        this.flipValue = 0;
+        this.animatedValue.addListener(({value}) => {
+            this.flipValue = value;
+        });
+        this.animatedTranslateValue = new Animated.Value(0);
+        this.flipInterpolate = this.animatedValue.interpolate({
+            inputRange: [0, 360],
+            outputRange: ['0deg', '360deg'],
+        });
+        this.opacityInterpolate = this.animatedTranslateValue.interpolate({
+            inputRange: [-400, 0, 400],
+            outputRange: [0, 1, 0],
+        });
+    }
+
+    componentWillUnmount() {
+        this.animatedValue.removeAllListeners();
+    }
+
+    swipe = () => {
+        Animated.sequence([
+            Animated.timing(this.animatedTranslateValue, {
+                toValue: -400,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+            Animated.timing(this.animatedTranslateValue, {
+                toValue: 400,
+                duration: 0,
+                useNativeDriver: true,
+            }),
+            Animated.timing(this.animatedTranslateValue, {
+                toValue: 0,
+                duration: 300,
+                useNativeDriver: true,
+            }),
+        ]).start();
+    };
+
+    flip = () => {
+        if (this.flipValue >= 180) {
+            Animated.spring(this.animatedValue, {
+                toValue: 0,
+                friction: 8,
+                tension: 10,
+                useNativeDriver: true,
+            }).start();
+        } else {
+            Animated.spring(this.animatedValue, {
+                toValue: 360,
+                friction: 8,
+                tension: 10,
+                useNativeDriver: true,
+            }).start();
+        }
+    }
     onYes = () => {
-        this.setState(state => ({
-            index: state.index + 1,
-            correct: state.correct + 1,
-            showAnswer: false
-        }));
+        this.swipe();
+        setTimeout(() => {
+            this.setState(state => ({
+                index: state.index + 1,
+                correct: state.correct + 1,
+                showAnswer: false
+            }));
+        }, 300);
+
     };
 
     onNo = () => {
-        this.setState(state => ({
-            index: state.index + 1,
-            showAnswer: false
-        }));
+
+        this.swipe();
+        setTimeout(() => {
+            this.setState(state => ({
+                index: state.index + 1,
+                showAnswer: false
+            }));
+        }, 300);
     };
 
     onRestart = () => {
@@ -62,15 +128,28 @@ class Quiz extends Component {
     }
 
     onToggleAnswer = () => {
-        this.setState((state) => ({
-            showAnswer: !state.showAnswer
-        }));
+        this.flip();
+         setTimeout(() => {
+            this.setState((state) => ({
+                showAnswer: !state.showAnswer
+            }));
+         }, 500);
     }
 
     render() {
 
         const {index, correct, showAnswer} = this.state;
         const {questions} = this.props.deck;
+
+        const animatedStyle = {
+            transform: [
+                {rotateY: this.flipInterpolate},
+                {translateX: this.animatedTranslateValue}
+            ],
+            opacity: this.opacityInterpolate,
+        };
+
+
         return (
             <Container style={{backgroundColor: "#FBFAFA"}}>
                 <Header>
@@ -88,21 +167,32 @@ class Quiz extends Component {
                 <View style={{flex: 1, padding: 12}}>
 
                     {(index < questions.length) ? (
-                        <View style={{flex: 1}}>
+
+                        <Animated.View style={[styles.container, animatedStyle, {flex: 1}]}>
                             <Card>
                                 <CardItem header>
                                     <Text>Question {index + 1} of {questions.length}</Text>
                                 </CardItem>
 
                                 <CardItem style={{flex: 1}}>
-                                    <Text style={{fontSize: 30, textAlign: 'center', flex:1}}>
+                                    <Text style={{fontSize: 30, textAlign: 'center', flex: 1}}>
                                         {questions[index].question}
                                     </Text>
                                 </CardItem>
-                                <CardItem style={{flex: 1, alignContent: 'flex-start', justifyContent: 'flex-start', alignItems: 'flex-start'}}>
-                                    <TouchableOpacity onPress={this.onToggleAnswer} style={{ flex:1}}>
+                                <CardItem style={{
+                                    flex: 1,
+                                    alignContent: 'flex-start',
+                                    justifyContent: 'flex-start',
+                                    alignItems: 'flex-start'
+                                }}>
+                                    <TouchableOpacity onPress={this.onToggleAnswer} style={{flex: 1}}>
 
-                                        <Text style={{color: 'red', textAlign: 'center', flex:1, fontSize:20}}>{showAnswer ? questions[0].answer: 'Show Answer'}</Text>
+                                        <Text style={{
+                                            color: 'red',
+                                            textAlign: 'center',
+                                            flex: 1,
+                                            fontSize: 20
+                                        }}>{showAnswer ? questions[index].answer : 'Show Answer'}</Text>
                                     </TouchableOpacity>
 
                                 </CardItem>
@@ -122,8 +212,8 @@ class Quiz extends Component {
                                     </Button>
                                 </CardItem>
                             </Card>
-                            {/*<Text>{JSON.stringify(questions[index], null, 2)}</Text>*/}
-                        </View>
+                        </Animated.View>
+
                     ) : (
                         <Card>
 
