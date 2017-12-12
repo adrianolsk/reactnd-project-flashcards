@@ -5,24 +5,22 @@ import {
     Header,
     Title,
     Button,
-    IconNB,
-    DeckSwiper,
-    Card,
-    CardItem,
     Icon,
-    Thumbnail,
     Text,
     Left,
     Right,
     Body,
-    Content, List, ListItem, InputGroup, Input, Form, Item, Label
+    Content,
+    Input,
+    Form,
+    Item,
+    Label
 } from "native-base";
 import {connect} from "react-redux";
-import {addCardToDeckAsync, getDeckAsync} from "../state/actions";
+import {addCardToDeckAsync} from "../state/actions";
 import {PrimaryColor} from "../utils/Colors";
 
 class AddCard extends Component {
-    // eslint-disable-line
 
     constructor() {
         super();
@@ -70,9 +68,7 @@ class AddCard extends Component {
                 };
             }
         }
-
-        return {}
-
+        return {};
     }
 
     render() {
@@ -98,9 +94,7 @@ class AddCard extends Component {
                     <Form>
                         <Item floatingLabel>
                             <Label style={{marginTop: 10, ...this.getFieldStyle('question')}}>* Question</Label>
-
                             <Input onChangeText={(value) => this.setValue(value, 'question')}/>
-
                         </Item>
                         <Item floatingLabel last>
                             <Label style={{marginTop: 10, ...this.getFieldStyle('answer')}}>* Answer</Label>
@@ -115,11 +109,6 @@ class AddCard extends Component {
         );
     }
 }
-
-//
-// const mapStateToProps = (state, props) => ({
-//     deck: state.deck
-// });
 
 const mapDispatchToProps = dispatch => ({
     addCardToDeck: (deck, card) => dispatch(addCardToDeckAsync(deck, card))

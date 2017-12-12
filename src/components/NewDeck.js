@@ -1,20 +1,19 @@
 import React, {Component} from "react";
 import {Keyboard} from 'react-native';
 import {
-    Header,
-    Title,
     Container,
     Item,
     Input,
-
     Content,
     Button,
-    Text, Left, Body, Right, Form, Label
+    Text,
+    Form,
+    Label
 } from "native-base";
 import {saveDeckTitle} from "../utils/api";
 import {saveDeckTitleAsync} from "../state/actions";
 import {connect} from "react-redux";
-import {Icon} from "expo";
+
 
 class NewDeck extends Component {
     state = {
@@ -24,7 +23,7 @@ class NewDeck extends Component {
 
     onSave = () => {
         this.setState({
-            isSubmitted:true
+            isSubmitted: true
         });
         if (this.state.title) {
             this.props.saveDeckTitle(this.state.title).then(() => {
@@ -49,21 +48,14 @@ class NewDeck extends Component {
     render() {
 
         return (
-            <Container style={{
-                backgroundColor: "#FFF"
-            }}>
-
-
+            <Container style={{backgroundColor: "#FFF"}}>
                 <Content>
                     <Form>
                         <Item floatingLabel>
-                            <Label style={{marginTop: 10,  ...this.getStyle()}}>*Name of your deck</Label>
+                            <Label style={{marginTop: 10, ...this.getStyle()}}>*Name of your deck</Label>
                             <Input onChangeText={title => this.setState({title})}/>
                         </Item>
-
                     </Form>
-
-
                     <Button success block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
                         <Text>Save</Text>
                     </Button>
