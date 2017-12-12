@@ -20,7 +20,8 @@ import {
 } from "native-base";
 import {connect} from "react-redux";
 import {getDeckAsync} from "../state/actions";
-import {clearLocalNotification, setLocalNotification} from "../utils/Notifications";
+import {PrimaryColor} from "../utils/Colors";
+import Score from "./Score";
 
 
 const initialState = {
@@ -97,19 +98,19 @@ class Quiz extends Component {
         }
     }
     onYes = () => {
+        //hide answer to block buttons while animating
+        this.setState({showAnswer: false});
         this.swipe();
         setTimeout(() => {
             this.setState(state => ({
                 index: state.index + 1,
-                correct: state.correct + 1,
-                showAnswer: false
+                correct: state.correct + 1
             }));
         }, 500);
 
     };
 
     onNo = () => {
-
         this.swipe();
         setTimeout(() => {
             this.setState(state => ({
@@ -124,6 +125,7 @@ class Quiz extends Component {
             ...initialState
         });
     }
+
     onBack = () => {
         this.props.navigation.goBack();
     }
@@ -135,14 +137,6 @@ class Quiz extends Component {
                 showAnswer: !state.showAnswer
             }));
         }, 300);
-    }
-
-
-    getScore = (correct, questions) => {
-
-        clearLocalNotification().then(setLocalNotification);
-        return (<Text style={{fontSize: 25, fontWeight:'bold'}}> {((100 * correct) / questions.length).toFixed(2)}% </Text>  );
-
     }
 
     render() {
@@ -158,10 +152,9 @@ class Quiz extends Component {
             opacity: this.opacityInterpolate,
         };
 
-
         return (
             <Container style={{backgroundColor: "#FBFAFA"}}>
-                <Header>
+                <Header style={{backgroundColor: PrimaryColor}}>
                     <Left>
                         <Button transparent onPress={() => this.props.navigation.goBack()}>
                             <Icon name="arrow-back"/>
@@ -174,17 +167,8 @@ class Quiz extends Component {
                 </Header>
 
                 <View style={{flex: 1, padding: 12}}>
-                    <View style={{
-                        position: 'absolute',
-                        flex: 1,
-                        zIndex: 0,
-                        top: 0,
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        justifyContent:'center'
-                    }}>
-                        <Spinner color='blue' />
+                    <View style={styles.spinner}>
+                        <Spinner color='blue'/>
                     </View>
 
                     {(index < questions.length) ? (
@@ -200,28 +184,17 @@ class Quiz extends Component {
                                         {questions[index].question}
                                     </Text>
                                 </CardItem>
-                                <CardItem style={{
-                                    flex: 1,
-                                    alignContent: 'flex-start',
-                                    justifyContent: 'flex-start',
-                                    alignItems: 'flex-start'
-                                }}>
+                                <CardItem style={styles.showAnswerCard}>
                                     <TouchableOpacity onPress={this.onToggleAnswer} style={{flex: 1}}>
-
-                                        <Text style={{
-                                            color: 'red',
-                                            textAlign: 'center',
-                                            flex: 1,
-                                            fontSize: 20
-                                        }}>{showAnswer ? questions[index].answer : 'Show Answer'}</Text>
+                                        <Text style={styles.showAnswerText}>
+                                            {showAnswer ? questions[index].answer : 'Show Answer'}
+                                        </Text>
                                     </TouchableOpacity>
-
                                 </CardItem>
 
                                 <CardItem header style={{
                                     flexDirection: "row",
                                     justifyContent: "space-between"
-
                                 }}>
                                     <Button iconLeft onPress={this.onYes} success disabled={!showAnswer}>
                                         <Icon name="arrow-back"/>
@@ -236,48 +209,13 @@ class Quiz extends Component {
                         </Animated.View>
 
                     ) : (
-                        <Card>
-
-                            <CardItem style={{
-                                flex: 1,
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center'
-                            }}>
-                                <View
-                                    style={{
-                                        flex: 1,
-                                        justifyContent: 'center',
-
-                                    }}
-                                >
-                                    <Text style={{fontSize: 25}}>Your Score: {this.getScore(correct, questions)}</Text>
-                                </View>
-                                <View style={{flex: 1}}>
-                                    <Button iconLeft
-                                            onPress={this.onRestart}
-                                            success
-                                            block
-                                            style={styles.button}>
-                                        <Icon name="refresh"/>
-                                        <Text> Restart Quiz
-                                        </Text>
-                                    </Button>
-                                    <Button iconLeft onPress={this.onBack} danger block style={styles.button}>
-                                        <Icon name="arrow-back"/>
-                                        <Text>Back to Deck</Text>
-
-                                    </Button>
-                                </View>
-                            </CardItem>
-
-                        </Card>
-
+                        <Score
+                            onBack={this.onBack}
+                            onRestart={this.onRestart}
+                            correct={correct}
+                            questions={questions.length}/>
                     )}
-
-
                 </View>
-
             </Container>
         );
     }
@@ -286,8 +224,28 @@ class Quiz extends Component {
 const styles = StyleSheet.create({
     button: {
         margin: 10
-
-
+    },
+    spinner: {
+        position: 'absolute',
+        flex: 1,
+        zIndex: 0,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        justifyContent: 'center'
+    },
+    showAnswerCard: {
+        flex: 1,
+        alignContent: 'flex-start',
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start'
+    },
+    showAnswerText: {
+        color: 'red',
+        textAlign: 'center',
+        flex: 1,
+        fontSize: 20
     }
 });
 

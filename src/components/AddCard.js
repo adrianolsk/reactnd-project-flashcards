@@ -19,6 +19,7 @@ import {
 } from "native-base";
 import {connect} from "react-redux";
 import {addCardToDeckAsync, getDeckAsync} from "../state/actions";
+import {PrimaryColor} from "../utils/Colors";
 
 class AddCard extends Component {
     // eslint-disable-line
@@ -76,11 +77,12 @@ class AddCard extends Component {
 
     render() {
 
+
         return (
             <Container style={{
                 backgroundColor: "#FFF"
             }}>
-                <Header>
+                <Header style={{backgroundColor: PrimaryColor}}>
                     <Left>
                         <Button transparent onPress={() => this.props.navigation.goBack()}>
                             <Icon name="arrow-back"/>
@@ -105,7 +107,7 @@ class AddCard extends Component {
                             <Input success onChangeText={(value) => this.setValue(value, 'answer')}/>
                         </Item>
                     </Form>
-                    <Button block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
+                    <Button block success style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
                         <Text>Save</Text>
                     </Button>
                 </Content>

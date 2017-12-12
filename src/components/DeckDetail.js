@@ -14,6 +14,7 @@ import {
 import {StyleSheet, Alert, View} from "react-native";
 import {connect} from "react-redux";
 import {getDeckAsync, removeDecksAsync} from "../state/actions";
+import {PrimaryColor} from "../utils/Colors";
 
 class DeckDetail extends Component {
 
@@ -57,7 +58,7 @@ class DeckDetail extends Component {
         debugger;
         return (
             <Container style={styles.container}>
-                <Header>
+                <Header style={{backgroundColor: PrimaryColor}}>
                     <Left>
                         <Button transparent onPress={() => this.props.navigation.navigate('Decks')}>
                             <Icon name="arrow-back"/>

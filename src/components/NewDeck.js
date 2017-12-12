@@ -18,10 +18,14 @@ import {Icon} from "expo";
 
 class NewDeck extends Component {
     state = {
-        title: ""
+        title: "",
+        isSubmitted: false
     };
 
     onSave = () => {
+        this.setState({
+            isSubmitted:true
+        });
         if (this.state.title) {
             this.props.saveDeckTitle(this.state.title).then(() => {
                 Keyboard.dismiss();
@@ -34,6 +38,14 @@ class NewDeck extends Component {
         }
     };
 
+    getStyle = () => {
+        const {isSubmitted, title} = this.state;
+        if (isSubmitted) {
+            if (title.length === 0) return {color: 'red'}
+            else return {color: 'green'}
+        }
+    }
+
     render() {
 
         return (
@@ -45,17 +57,14 @@ class NewDeck extends Component {
                 <Content>
                     <Form>
                         <Item floatingLabel>
-                            <Label style={{marginTop: 10}}>Name of your deck</Label>
-                            <Input  onChangeText={title => this.setState({title})} />
+                            <Label style={{marginTop: 10,  ...this.getStyle()}}>*Name of your deck</Label>
+                            <Input onChangeText={title => this.setState({title})}/>
                         </Item>
 
                     </Form>
 
 
-
-
-
-                    <Button block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
+                    <Button success block style={{margin: 15, marginTop: 50}} onPress={this.onSave}>
                         <Text>Save</Text>
                     </Button>
                 </Content>
